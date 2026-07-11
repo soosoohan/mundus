@@ -16,8 +16,10 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
-    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-  }
+  -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+  width: 100%; height: 100%;
+  overflow: hidden;
+}
   body {
     font-family: 'Segoe UI', sans-serif;
     background: #1a1a2e;
@@ -72,15 +74,17 @@
 
   #grid {
     display: grid;
-    grid-template-columns: repeat(5, 72px);
-    grid-template-rows: repeat(5, 72px);
+    grid-template-columns: repeat(5, clamp(36px, 15vw, 60px));
+    grid-template-rows: repeat(5, clamp(36px, 15vw, 60px));
     gap: 4px; background: #111; padding: 6px;
     border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
   .cell {
-    width: 72px; height: 72px; border-radius: 8px; background: #222;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; font-weight: bold; transition: background 0.15s;
+  width: clamp(36px, 15vw, 60px);
+  height: clamp(36px, 15vw, 60px);
+  border-radius: 8px; background: #222;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; font-weight: bold; transition: background 0.15s;
   }
   .cell.fruit-cell { font-size: 2rem; }
 
