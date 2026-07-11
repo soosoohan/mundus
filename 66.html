@@ -281,11 +281,6 @@ function init() {
  buildGrid(); buildColButtons(); updateQueueUI(); renderBoard(); highlightCol();
 }
 
-// 게임픽스 관련 추가
-window.addEventListener('load', function() {
-  GamePix.sdk.gameLoadingFinished();
-});
-
   
 function randomCard() {
   if (Math.random() < 0.05) {
