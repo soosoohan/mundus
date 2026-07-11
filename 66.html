@@ -572,9 +572,14 @@ document.addEventListener('keydown', e => {
   if (e.key==='Enter'||e.key===' ') { e.preventDefault(); dropCard(); }
 });
 
+
+// ⚠️ restart-btn 리스너에 gameplayStart() 추가
 document.getElementById('drop-btn').addEventListener('click', dropCard);
-document.getElementById('restart-btn').addEventListener('click', init);
- GamePix.sdk.gameplayStart();//게임픽스
+document.getElementById('restart-btn').addEventListener('click', function() {
+ init();
+ safeGamePix(() => GamePix.sdk.gameplayStart());
+});
+
 
 document.getElementById('save-score-btn').addEventListener('click', function() {
   this.disabled = true;
@@ -593,6 +598,11 @@ document.getElementById('ranking-btn').addEventListener('click', function() {
   area.style.display = 'block';
   this.textContent = '🏆 Close Leaderboard';
 });
+ // ⚠️ 로딩 완료 이벤트
+window.addEventListener('load', function() {
+  safeGamePix(() => GamePix.sdk.gameLoadingFinished());
+});
+
 </script>
 </body>
 </html>
