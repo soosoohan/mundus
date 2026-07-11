@@ -11,6 +11,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>NumNum 6x6</title>
+<meta name="robots" content="noindex, nofollow">
 <meta name="description" content="NumNum 6x6 — Drop numbers and fruits, multiply and merge!">
 <meta name="keywords" content="NumNum, fruit card number merge, number multiply puzzle, merge game, brain game">
 <meta name="author" content="Soosooland">
@@ -35,6 +36,11 @@
   "playMode": ["SinglePlayer"],
   "inLanguage": ["en"]
 }
+
+// 게임픽스 관련 추가  
+  <script src="https://sdk.gamepix.com/v3/gamepix.sdk.js"></script>
+
+  
 </script>
 
 <style>
@@ -283,23 +289,31 @@ document.getElementById('player-id').textContent = playerId;
 let board, queue, selectedCol, score, gameOver, isMobile;
 
 function startGame() {
-  document.getElementById('start-screen').style.display = 'none';
-  init();
+ document.getElementById('start-screen').style.display = 'none';
+ init();
+ GamePix.sdk.gameStarted(); //게임 픽스 관련
 }
 window.startGame = startGame;
 
+
 function init() {
-  score = 0; gameOver = false; selectedCol = 0;
-  document.getElementById('score').textContent = '0';
-  document.getElementById('overlay').classList.remove('show');
-  board = Array.from({length: ROWS}, () => Array.from({length: COLS}, () => ({value: 0})));
-  queue = Array.from({length: QUEUE_SIZE + 10}, randomCard);
-  isMobile = window.innerWidth <= 600 || 'ontouchstart' in window;
-  document.getElementById('drop-btn').style.display = isMobile ? 'block' : 'none';
-  document.getElementById('pc-hint').style.display  = isMobile ? 'none'  : 'block';
-  buildGrid(); buildColButtons(); updateQueueUI(); renderBoard(); highlightCol();
+ score = 0; gameOver = false; selectedCol = 0;
+ document.getElementById('score').textContent = '0';
+ document.getElementById('overlay').classList.remove('show');
+ board = Array.from({length: ROWS}, () => Array.from({length: COLS}, () => ({value: 0})));
+ queue = Array.from({length: QUEUE_SIZE + 10}, randomCard);
+ isMobile = window.innerWidth <= 600 || 'ontouchstart' in window;
+ document.getElementById('drop-btn').style.display = isMobile ? 'block' : 'none';
+ document.getElementById('pc-hint').style.display  = isMobile ? 'none'  : 'block';
+ buildGrid(); buildColButtons(); updateQueueUI(); renderBoard(); highlightCol();
 }
 
+// 게임픽스 관련 추가
+window.addEventListener('load', function() {
+  GamePix.sdk.gameLoadingFinished();
+});
+
+  
 function randomCard() {
   if (Math.random() < 0.05) {
     return { fruit: FRUIT_CARDS[Math.floor(Math.random() * FRUIT_CARDS.length)] };
@@ -526,14 +540,17 @@ function compactDown(c) {
 }
 
 async function checkGameOver() {
-  for (let c = 0; c < COLS; c++) { if (isEmpty(board[0][c])) return; }
-  gameOver = true;
-  document.getElementById('final-score').textContent = score.toLocaleString();
-  document.getElementById('save-score-btn').disabled = false;
-  document.getElementById('save-score-btn').textContent = '💾 Save Score';
-  document.getElementById('overlay').classList.add('show');
+ for (let c = 0; c < COLS; c++) { if (isEmpty(board[0][c])) return; }
+ gameOver = true;
+ document.getElementById('final-score').textContent = score.toLocaleString();
+ document.getElementById('save-score-btn').disabled = false;
+ document.getElementById('save-score-btn').textContent = '💾 Save Score';
+ document.getElementById('overlay').classList.add('show');
+ GamePix.sdk.gameplayStop(); //게임픽스
+ GamePix.sdk.sendScore(score); //게임픽스
 }
 
+ 
 function getLocalBoard() {
   try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; }
   catch(e) { return []; }
@@ -582,6 +599,7 @@ document.addEventListener('keydown', e => {
 
 document.getElementById('drop-btn').addEventListener('click', dropCard);
 document.getElementById('restart-btn').addEventListener('click', init);
+ GamePix.sdk.gameplayStart();//게임픽스
 
 document.getElementById('save-score-btn').addEventListener('click', function() {
   this.disabled = true;
