@@ -15,20 +15,30 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
-  -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-  width: 100%; height: 100%;
-  overflow: hidden;
- }
-  body {
-    font-family: 'Segoe UI', sans-serif;
+    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    position: relative;
     background: #1a1a2e;
+    font-family: 'Segoe UI', sans-serif;
     color: #eee;
+  }
+
+  /* ── 스케일링 wrapper ── */
+  #game-wrapper {
+    width: 340px;
+    height: 780px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform-origin: center center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    padding: 20px;
+    padding: 20px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
+
   .back-button {
     position: absolute; top: 20px; left: 20px;
     padding: 8px 10px; font-size: 2em; font-weight: bold;
@@ -71,16 +81,17 @@
   }
   .col-btn:hover:not(.selected) { background: #3a3a6a; color: #888; }
 
+  /* ── 그리드: clamp → 고정 px ── */
   #grid {
     display: grid;
-    grid-template-columns: repeat(6, clamp(32px, 12vw, 54px));
-    grid-template-rows: repeat(6, clamp(32px, 12vw, 54px));
+    grid-template-columns: repeat(6, 54px);
+    grid-template-rows: repeat(6, 54px);
     gap: 4px; background: #111; padding: 6px;
     border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
   .cell {
-    width: clamp(32px, 12vw, 54px);
-    height: clamp(32px, 12vw, 54px);
+    width: 54px;
+    height: 54px;
     border-radius: 8px; background: #222;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.4rem; font-weight: bold; transition: background 0.15s;
@@ -166,41 +177,43 @@
   <footer><p>© 2026 Han Soosoo. All rights reserved.</p></footer>
 </div>
 
-<button class="back-button" onclick="location.href='index.html'">←</button>
-<h1>🍎 NumNum</h1>
-<div id="player-id"></div>
-<div id="score-area">Score: <span id="score">0</span></div>
+<div id="game-wrapper">
+  <button class="back-button" onclick="location.href='index.html'">←</button>
+  <h1>🍎 NumNum</h1>
+  <div id="player-id"></div>
+  <div id="score-area">Score: <span id="score">0</span></div>
 
-<div id="fruit-legend">
-  <div class="fruit-item"><div class="fruit-badge">🍎</div><span>×2</span></div>
-  <div class="fruit-item"><div class="fruit-badge">🍒</div><span>×4</span></div>
-  <div class="fruit-item"><div class="fruit-badge">🍇</div><span>×8</span></div>
-</div>
-
-<div id="queue-area">
-  <div class="queue-slot">
-    <div class="queue-label">Next Card</div>
-    <div class="queue-card active" id="q0"></div>
+  <div id="fruit-legend">
+    <div class="fruit-item"><div class="fruit-badge">🍎</div><span>×2</span></div>
+    <div class="fruit-item"><div class="fruit-badge">🍒</div><span>×4</span></div>
+    <div class="fruit-item"><div class="fruit-badge">🍇</div><span>×8</span></div>
   </div>
-  <div class="queue-slot">
-    <div class="queue-label"></div>
-    <div class="queue-card" id="q1"></div>
-  </div>
-  <div class="queue-slot">
-    <div class="queue-label"></div>
-    <div class="queue-card" id="q2"></div>
-  </div>
-</div>
 
-<div id="col-buttons"></div>
-<div id="grid"></div>
-<button id="drop-btn">▼ Drop</button>
-<div id="pc-hint">← → Select column · Enter / Space Drop</div>
-<button id="ranking-btn" style="margin-top:14px; padding:10px 28px; border-radius:10px; border:none; background:#2a2a4a; color:#f0c040; font-size:0.95rem; cursor:pointer;">🏆 Leaderboard</button>
+  <div id="queue-area">
+    <div class="queue-slot">
+      <div class="queue-label">Next Card</div>
+      <div class="queue-card active" id="q0"></div>
+    </div>
+    <div class="queue-slot">
+      <div class="queue-label"></div>
+      <div class="queue-card" id="q1"></div>
+    </div>
+    <div class="queue-slot">
+      <div class="queue-label"></div>
+      <div class="queue-card" id="q2"></div>
+    </div>
+  </div>
 
-<div id="ranking-area" style="display:none;">
-  <h3>🏆 Top 10 · NumNum 6×6 (this device)</h3>
-  <div id="ranking-list"></div>
+  <div id="col-buttons"></div>
+  <div id="grid"></div>
+  <button id="drop-btn">▼ Drop</button>
+  <div id="pc-hint">← → Select column · Enter / Space Drop</div>
+  <button id="ranking-btn" style="margin-top:14px; padding:10px 28px; border-radius:10px; border:none; background:#2a2a4a; color:#f0c040; font-size:0.95rem; cursor:pointer;">🏆 Leaderboard</button>
+
+  <div id="ranking-area" style="display:none;">
+    <h3>🏆 Top 10 · NumNum 6×6 (this device)</h3>
+    <div id="ranking-list"></div>
+  </div>
 </div>
 
 <div id="overlay">
@@ -261,14 +274,24 @@ document.getElementById('player-id').textContent = playerId;
 
 let board, queue, selectedCol, score, gameOver, isMobile;
 
-// ⚠️ safeGamePix 헬퍼 추가
 function safeGamePix(fn) {
   try { if (window.GamePix && window.GamePix.sdk) fn(); } catch(e) {}
 }
 
+// ── iframe 크기에 맞춰 게임 wrapper 스케일 조정 ──
+function fitToViewport() {
+  const baseW = 340, baseH = 780;
+  const scale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH, 1.6);
+  const wrapper = document.getElementById('game-wrapper');
+  wrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
+}
+window.addEventListener('resize', fitToViewport);
+window.addEventListener('load', fitToViewport);
+fitToViewport();
+
 function startGame() {
- document.getElementById('start-screen').style.display = 'none';
- init();
+  document.getElementById('start-screen').style.display = 'none';
+  init();
 }
 window.startGame = startGame;
 
@@ -285,7 +308,7 @@ function init() {
  buildGrid(); buildColButtons(); updateQueueUI(); renderBoard(); highlightCol();
 }
 
-  
+
 function randomCard() {
   if (Math.random() < 0.05) {
     return { fruit: FRUIT_CARDS[Math.floor(Math.random() * FRUIT_CARDS.length)] };
@@ -429,7 +452,7 @@ const newVal = Math.min(oldVal * mult, 2048);
 if (newVal === oldVal) continue;
 score += newVal - oldVal;
 document.getElementById('score').textContent = score;
-safeGamePix(() => GamePix.updateScore(score));   // ← 이 줄 추가
+safeGamePix(() => GamePix.updateScore(score));
 board[nr][nc] = { value: newVal };
 effectSet.add(`${nr}-${nc}`);
 if (newVal >= 256) fireConfetti();
@@ -463,7 +486,7 @@ function runMergeLoop(newR, newC, mergeSet) {
   const newVal = val*2;
   score += newVal;
   document.getElementById('score').textContent = score;
-  safeGamePix(() => GamePix.updateScore(score));   // ← 이 줄 추가
+  safeGamePix(() => GamePix.updateScore(score));
   board[nr][nc] = {value:newVal}; board[r][c] = {value:0};
   mergeSet.add(`${nr}-${nc}`); next.push({r:nr,c:nc});
   if (newVal>=256) fireConfetti();
@@ -523,7 +546,7 @@ async function checkGameOver() {
  safeGamePix(() => GamePix.updateScore(score));
 }
 
- 
+
 function getLocalBoard() {
   try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; }
   catch(e) { return []; }
@@ -571,7 +594,6 @@ document.addEventListener('keydown', e => {
 });
 
 
-// ⚠️ restart-btn 리스너에 gameplayStart() 추가
 document.getElementById('drop-btn').addEventListener('click', dropCard);
 document.getElementById('restart-btn').addEventListener('click', function() {
  init();
