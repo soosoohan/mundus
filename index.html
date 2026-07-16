@@ -7,109 +7,55 @@
  console.log("https://soosooland.com");
  console.log("NumNum | Born: 2026-06-13");
 </script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>NumNum</title>
 <meta name="description" content="Drop and merge number cards in this strategic puzzle game. Special fruit cards double, quadruple, or 8x adjacent numbers.">
 <meta name="keywords" content="NumNum, merge game, number puzzle, 2048-like game, brain game, puzzle game, drop game">
 <style>
- * { box-sizing: border-box; margin: 0; padding: 0; }
-  html {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;  
-  overflow-y: auto; 
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
- 
-body {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  font-family: 'Segoe UI', sans-serif;
-  background: #1a1a2e;
-  color: #eee;
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 100%;         
-  overflow-y: auto;  
-  overflow-x: hidden;
-  padding: 30px 20px 60px;
-  -webkit-overflow-scrolling: touch;
-}
+ html, body {
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: hidden;
+  }
+  body {
+    -webkit-overflow-scrolling: touch;
+    font-family: 'Segoe UI', sans-serif;
+    background: #1a1a2e;
+    color: #eee;
+    min-height: 100vh;
+    padding: 20px 20px 30px;
+    overflow-y: auto;
+  }
 
   header {
     text-align: center;
-    margin-bottom: 40px;
-    padding-top: 20px;
+    margin-bottom: 18px;
+    padding-top: 8px;
   }
 
   h1 {
-    font-size: 2.8rem;
+    font-size: 2.2rem;
     color: #f0c040;
     letter-spacing: 3px;
     margin-bottom: 8px;
   }
 
-  .info-card {
-    max-width: 680px;
-    margin: 0 auto 28px;
-    background: #fce9dc;
-    border-radius: 15px;
-    padding: 24px 28px;
-    color: #7A2E2E;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  }
-
-  .info-card h2 {
-    font-size: 1.2rem;
+  .tagline {
+    font-size: 1.15rem;
     font-weight: bold;
-    color: #7A2E2E;
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #f0c040;
-  }
-
-  .info-card p {
-    font-size: 0.97rem;
-    line-height: 1.8;
-    color: #7A2E2E;
-    margin-bottom: 10px;
-  }
-  .info-card p:last-child { margin-bottom: 0; }
-
-  .info-card h3 {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #a04040;
-    margin: 14px 0 4px;
-  }
-  .info-card h3:first-of-type { margin-top: 4px; }
-
-  .control-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 8px;
-    font-size: 0.93rem;
-  }
-  .control-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #e8c8b0;
-    color: #7A2E2E;
-    vertical-align: top;
-  }
-  .control-table tr:last-child td { border-bottom: none; }
-  .control-table td:first-child {
-    font-weight: bold;
-    white-space: nowrap;
-    width: 120px;
-    color: #a04040;
+    color: #FFD6BA;
   }
 
   .selection-container {
     max-width: 680px;
-    margin: 0 auto 28px;
+    margin: 0 auto 20px;
   }
   .selection-row {
     display: flex;
@@ -121,8 +67,8 @@ body {
     flex: 1;
     min-width: 200px;
     max-width: 300px;
-    padding: 28px 20px;
-    font-size: 1.2em;
+    padding: 20px 20px;
+    font-size: 1.15em;
     font-weight: bold;
     border: none;
     border-radius: 15px;
@@ -141,11 +87,91 @@ body {
   }
   .selection-button:active { transform: translateY(-1px); }
 
+  .info-card {
+    max-width: 680px;
+    margin: 0 auto 16px;
+    background: #fce9dc;
+    border-radius: 15px;
+    padding: 16px 22px;
+    color: #7A2E2E;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+
+  .info-card h2 {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #7A2E2E;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #f0c040;
+  }
+
+  .control-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+    font-size: 0.9rem;
+  }
+  .control-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e8c8b0;
+    color: #7A2E2E;
+    vertical-align: top;
+  }
+  .control-table tr:last-child td { border-bottom: none; }
+  .control-table td:first-child {
+    font-weight: bold;
+    white-space: nowrap;
+    width: 120px;
+    color: #a04040;
+  }
+
+  .howto-toggle {
+    max-width: 680px;
+    margin: 0 auto 16px;
+  }
+  .howto-toggle summary {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #eee;
+    cursor: pointer;
+    list-style: none;
+    text-align: center;
+    padding: 6px;
+  }
+  .howto-toggle summary::-webkit-details-marker { display: none; }
+  .howto-toggle summary::after { content: ' ▼'; font-size: 0.7rem; }
+  .howto-toggle[open] summary::after { content: ' ▲'; }
+
+  .howto-toggle .body {
+    background: #fce9dc;
+    border-radius: 15px;
+    padding: 16px 22px;
+    margin-top: 8px;
+    color: #7A2E2E;
+  }
+
+  .howto-toggle p {
+    font-size: 0.93rem;
+    line-height: 1.7;
+    color: #7A2E2E;
+    margin-bottom: 8px;
+  }
+  .howto-toggle p:last-child { margin-bottom: 0; }
+
+  .howto-toggle h3 {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #a04040;
+    margin: 10px 0 3px;
+  }
+  .howto-toggle h3:first-of-type { margin-top: 0; }
+
   footer {
     text-align: center;
     color: #d1cbcb;
-    font-size: 0.8rem;
-    margin-top: 30px;
+    font-size: 0.75rem;
+    margin-top: 16px;
   }
 </style>
 </head>
@@ -154,31 +180,8 @@ body {
 
 <header>
   <h1>NumNum</h1>
+  <div class="tagline">Drop and merge number cards.</div>
 </header>
-
-<div class="info-card">
-  <h2>What is NumNum?</h2>
-  <p>
-    NumNum is a strategic puzzle game where you drop number cards onto a grid and merge matching numbers together.
-    Choose a column, drop your card, and merge your way to bigger numbers — no time pressure.
-  </p>
-</div>
-
-<div class="info-card">
-  <h2>How to Play</h2>
-
-  <h3>Drop Cards</h3>
-  <p>3 cards wait in queue. Choose a column to drop the first card — it lands on the bottom or on top of another card.</p>
-
-  <h3>Merge Numbers</h3>
-  <p>Matching numbers adjacent in any direction merge. The newer card is absorbed into the older one, doubling its value. Chain merges are possible.</p>
-  <p>Number cards (2, 4, 8, 16) and special cards are shuffled together randomly in the queue.</p>
-  <p>Special cards transform adjacent cards: 🍎×2 🍒×4 🍇×8</p>
-  <p>Numbers 2048 and above are not affected by fruit card effects.</p>
-
-  <h3>Game Over</h3>
-  <p>The game ends when the top row is full. Watch the top.</p>
-</div>
 
 <div class="selection-container">
   <div class="selection-row">
@@ -205,6 +208,23 @@ body {
     </tr>
   </table>
 </div>
+
+<details class="howto-toggle">
+  <summary>How to Play</summary>
+  <div class="body">
+    <h3>Drop Cards</h3>
+    <p>3 cards wait in queue. Choose a column to drop the first card — it lands on the bottom or on top of another card.</p>
+
+    <h3>Merge Numbers</h3>
+    <p>Matching numbers adjacent in any direction merge. The newer card is absorbed into the older one, doubling its value. Chain merges are possible.</p>
+    <p>Number cards (2, 4, 8, 16) and special cards are shuffled together randomly in the queue.</p>
+    <p>Special cards transform adjacent cards: 🍎×2 🍒×4 🍇×8</p>
+    <p>Numbers 2048 and above are not affected by fruit card effects.</p>
+
+    <h3>Game Over</h3>
+    <p>The game ends when the top row is full. Watch the top.</p>
+  </div>
+</details>
 
 <footer>
   <p>© 2026 Han Soosoo. All rights reserved.</p>
