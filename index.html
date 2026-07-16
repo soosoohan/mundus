@@ -17,9 +17,11 @@
   html {
   width: 100%;
   height: 100%;
-  overflow: hidden;      /* 문서 자체는 안 넘치게 */
+  overflow: hidden;  
+  overflow-y: auto; 
 }
 
+ 
 body {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -28,10 +30,12 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: #1a1a2e;
   color: #eee;
+  box-sizing: border-box;
   width: 100%;
-  height: 100%;           /* min-height 대신 height 고정 */
-  overflow-y: auto;       /* body 자체가 스크롤 컨테이너 */
+  min-height: 100%;         
+  overflow-y: auto;  
   overflow-x: hidden;
+  overflow: visible;
   padding: 30px 20px 60px;
   -webkit-overflow-scrolling: touch;
 }
