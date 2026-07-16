@@ -7,7 +7,6 @@
  console.log("https://soosooland.com");
  console.log("NumNum | Born: 2026-06-13");
 </script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>NumNum</title>
@@ -15,223 +14,118 @@
 <meta name="keywords" content="NumNum, merge game, number puzzle, 2048-like game, brain game, puzzle game, drop game">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html, body {
-    height: 100%;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    width: 100%; height: 100%;
     overflow: hidden;
-  }
-  body {
-    -webkit-overflow-scrolling: touch;
-    font-family: 'Segoe UI', sans-serif;
+    position: relative;
     background: #1a1a2e;
+    font-family: 'Segoe UI', sans-serif;
     color: #eee;
-    min-height: 100%;
-    padding: 10px 16px 14px;
-    overflow-y: auto;
+    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
   }
 
-  header {
-    text-align: center;
-    margin-bottom: 8px;
-    padding-top: 2px;
-  }
-
-  h1 {
-    font-size: 1.6rem;
-    color: #f0c040;
-    letter-spacing: 2px;
-    margin-bottom: 2px;
-  }
-
-  .tagline {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #FFD6BA;
-  }
-
-  .selection-container {
-    max-width: 680px;
-    margin: 0 auto 10px;
-  }
-  .selection-row {
+  /* ── 44/55/66과 동일한 스케일링 wrapper ── */
+  #game-wrapper {
+    width: 340px;
+    height: 480px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform-origin: center center;
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  header { text-align: center; margin-bottom: 6px; }
+  h1 { font-size: 1.5rem; color: #f0c040; letter-spacing: 2px; }
+  .tagline { font-size: 0.75rem; color: #FFD6BA; margin-top: 2px; }
+
+  .selection-row {
+    display: flex; flex-direction: column; gap: 8px;
+    width: 100%; margin-bottom: 10px;
   }
   .selection-button {
-    flex: 1;
-    min-width: 140px;
-    max-width: 220px;
-    padding: 10px 12px;
-    font-size: 0.95em;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
+    width: 100%; padding: 10px; font-size: 0.95rem; font-weight: bold;
+    border: none; border-radius: 10px;
     background: linear-gradient(145deg, #FFD6BA, #FFCAA6);
-    color: #7A2E2E;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    text-align: center;
+    color: #7A2E2E; cursor: pointer; text-align: center;
   }
-  .selection-button:hover {
-    background: linear-gradient(145deg, #FF9494, #FF7373);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(255,148,148,0.3);
-  }
-  .selection-button:active { transform: translateY(-1px); }
+  .selection-button:hover { background: linear-gradient(145deg, #FF9494, #FF7373); color: #fff; }
 
   .info-card {
-    max-width: 680px;
-    margin: 0 auto 8px;
-    background: #fce9dc;
-    border-radius: 10px;
-    padding: 8px 14px;
-    color: #7A2E2E;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    width: 100%; background: #fce9dc; border-radius: 10px;
+    padding: 8px 12px; color: #7A2E2E; margin-bottom: 8px;
   }
+  .control-table { width: 100%; font-size: 0.72rem; border-collapse: collapse; }
+  .control-table td { padding: 3px 4px; color: #7A2E2E; }
+  .control-table td:first-child { font-weight: bold; color: #a04040; white-space: nowrap; }
 
-  .info-card h2 {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #7A2E2E;
-    margin-bottom: 4px;
-    padding-bottom: 3px;
-    border-bottom: 2px solid #f0c040;
-  }
-
-  .control-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 2px;
-    font-size: 0.75rem;
-  }
-  .control-table td {
-    padding: 3px 8px;
-    border-bottom: 1px solid #e8c8b0;
-    color: #7A2E2E;
-    vertical-align: top;
-  }
-  .control-table tr:last-child td { border-bottom: none; }
-  .control-table td:first-child {
-    font-weight: bold;
-    white-space: nowrap;
-    width: 100px;
-    color: #a04040;
-  }
-
-  .howto-toggle {
-    max-width: 680px;
-    margin: 0 auto 8px;
-  }
+  .howto-toggle { width: 100%; }
   .howto-toggle summary {
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #eee;
-    cursor: pointer;
-    list-style: none;
-    text-align: center;
-    padding: 3px;
+    font-size: 0.78rem; font-weight: bold; color: #eee;
+    cursor: pointer; list-style: none; text-align: center;
   }
   .howto-toggle summary::-webkit-details-marker { display: none; }
-  .howto-toggle summary::after { content: ' ▼'; font-size: 0.65rem; }
+  .howto-toggle summary::after { content: ' ▼'; font-size: 0.6rem; }
   .howto-toggle[open] summary::after { content: ' ▲'; }
-
   .howto-toggle .body {
-    background: #fce9dc;
-    border-radius: 10px;
-    padding: 8px 14px;
-    margin-top: 4px;
-    color: #7A2E2E;
-    max-height: 140px;
-    overflow-y: auto;
+    background: #fce9dc; border-radius: 10px; padding: 8px 12px;
+    margin-top: 4px; max-height: 100px; overflow-y: auto;
   }
+  .howto-toggle p { font-size: 0.68rem; line-height: 1.35; color: #7A2E2E; margin-bottom: 3px; }
 
-  .howto-toggle p {
-    font-size: 0.72rem;
-    line-height: 1.4;
-    color: #7A2E2E;
-    margin-bottom: 4px;
-  }
-  .howto-toggle p:last-child { margin-bottom: 0; }
-
-  .howto-toggle h3 {
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: #a04040;
-    margin: 5px 0 2px;
-  }
-  .howto-toggle h3:first-of-type { margin-top: 0; }
-
-  footer {
-    text-align: center;
-    color: #d1cbcb;
-    font-size: 0.65rem;
-    margin-top: 4px;
-  }
+  footer { text-align: center; color: #d1cbcb; font-size: 0.6rem; margin-top: 6px; }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>NumNum</h1>
-  <div class="tagline">Drop and merge number cards.</div>
-</header>
+<div id="game-wrapper">
+  <header>
+    <h1>NumNum</h1>
+    <div class="tagline">Drop and merge number cards.</div>
+  </header>
 
-<div class="selection-container">
   <div class="selection-row">
-    <button class="selection-button" onclick="location.href='44.html'">NumNum 4X4</button>
-    <button class="selection-button" onclick="location.href='55.html'">NumNum 5X5</button>
-    <button class="selection-button" onclick="location.href='66.html'">NumNum 6X6</button>
+    <button class="selection-button" onclick="location.href='44.html'">NumNum 4×4</button>
+    <button class="selection-button" onclick="location.href='55.html'">NumNum 5×5</button>
+    <button class="selection-button" onclick="location.href='66.html'">NumNum 6×6</button>
   </div>
+
+  <div class="info-card">
+    <table class="control-table">
+      <tr><td>← →</td><td>Select column (PC)</td></tr>
+      <tr><td>Enter/Space</td><td>Drop (PC)</td></tr>
+      <tr><td>Tap</td><td>Select & drop (mobile)</td></tr>
+    </table>
+  </div>
+
+  <details class="howto-toggle">
+    <summary>How to Play</summary>
+    <div class="body">
+      <p>Drop cards into a column. Matching numbers merge and double.</p>
+      <p>🍎×2 🍒×4 🍇×8 — fruit cards multiply adjacent numbers.</p>
+      <p>Game ends when the top row fills up.</p>
+    </div>
+  </details>
+
+  <footer>© 2026 Han Soosoo. All rights reserved.</footer>
 </div>
 
-<div class="info-card">
-  <h2>Controls</h2>
-  <table class="control-table">
-    <tr>
-      <td>← →</td>
-      <td>Select column (PC)</td>
-    </tr>
-    <tr>
-      <td>Enter, Space</td>
-      <td>Drop card (PC)</td>
-    </tr>
-    <tr>
-      <td>Tap column button</td>
-      <td>Drop card (mobile)</td>
-    </tr>
-  </table>
-</div>
-
-<details class="howto-toggle">
-  <summary>How to Play</summary>
-  <div class="body">
-    <h3>Drop Cards</h3>
-    <p>3 cards wait in queue. Choose a column to drop the first card — it lands on the bottom or on top of another card.</p>
-
-    <h3>Merge Numbers</h3>
-    <p>Matching numbers adjacent in any direction merge. The newer card is absorbed into the older one, doubling its value. Chain merges are possible.</p>
-    <p>Number cards (2, 4, 8, 16) and special cards are shuffled together randomly in the queue.</p>
-    <p>Special cards transform adjacent cards: 🍎×2 🍒×4 🍇×8</p>
-    <p>Numbers 2048 and above are not affected by fruit card effects.</p>
-
-    <h3>Game Over</h3>
-    <p>The game ends when the top row is full. Watch the top.</p>
-  </div>
-</details>
-
-<footer>
-  <p>© 2026 Han Soosoo. All rights reserved.</p>
-</footer>
 <script>
+function fitToViewport() {
+  const baseW = 340, baseH = 480;
+  const scale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH, 1.6);
+  document.getElementById('game-wrapper').style.transform =
+    `translate(-50%, -50%) scale(${scale})`;
+}
+window.addEventListener('resize', fitToViewport);
+window.addEventListener('load', fitToViewport);
+fitToViewport();
+
 window.addEventListener('load', function() {
   if (window.GamePix && window.GamePix.loaded) GamePix.loaded();
 });
